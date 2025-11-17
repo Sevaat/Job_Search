@@ -6,7 +6,7 @@ from src.database_creator import DatabaseCreator
 from src.vacancies_api import VacanciesAPI
 from src.utils import is_convertible_to_id
 
-if __name__ == "__main__":
+def run() -> None:
     print("Вас приветствует пользовательский интерфейс программы 'Job_Search', необходимая для поиска вакансий!")
     print("Введите ID интересующих Вас организаций через запятую.")
     company_ids: List[int] = [] # [1740, 3529, 41, 65, 2180, 4181, 2748, 78638, 84585, 1122462]
@@ -69,3 +69,6 @@ if __name__ == "__main__":
             continue
         elif answer == "2":
             break
+
+if __name__ == "__main__":
+    run()
