@@ -1,5 +1,5 @@
 import os
-from typing import Any, Self
+from typing import Any, Self, Union
 
 import psycopg2
 from dotenv import load_dotenv
@@ -7,6 +7,10 @@ from psycopg2.extras import RealDictCursor
 
 
 class DBManager:
+    """
+    Работать пользователю с данными БД
+    """
+
     def __init__(self) -> None:
         load_dotenv()
         self.conn_params = {
@@ -87,9 +91,10 @@ class DBManager:
                 text_list.append(text)
             return "\n".join(text_list)
 
-    def get_avg_salary(self) -> str:
+    def get_avg_salary(self, is_float: bool = False) -> Union[str, float]:
         """
         Получить среднюю зарплату по всем вакансиям
+        :param is_float: необходимо ли вывести только float: True - вывод float, иначе - вывод str
         :return: средняя ЗП
         """
         self._connect()
@@ -105,16 +110,17 @@ class DBManager:
             """
             )
             result = cur.fetchone()
-            return (
-                f'Средняя зарплата по всем вакансиям: {float(result["avg_salary"]) if result["avg_salary"] else 0.0}'
-            )
+            if is_float:
+                return float(result["avg_salary"]) if result["avg_salary"] else 0.0
+            else:
+                return f'Средняя ЗП по всем вакансиям: {float(result["avg_salary"]) if result["avg_salary"] else 0.0}'
 
     def get_vacancies_with_higher_salary(self) -> str:
         """
         Получить вакансии, где хотя бы одна граница зарплаты > средней
         :return: список вакансий
         """
-        avg_salary = self.get_avg_salary()
+        avg_salary = self.get_avg_salary(is_float=True)
         self._connect()
         with self.conn.cursor() as cur:
             cur.execute(
