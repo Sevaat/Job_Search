@@ -33,6 +33,10 @@ CREATE INDEX IF NOT EXISTS idx_vacancies_salary_to ON vacancies(salary_to);
 
 
 class DatabaseCreator(ABC):
+    """
+    Подключиться к БД для создания таблиц
+    """
+
     @staticmethod
     def _create_tables(conn: Any) -> None:
         """
