@@ -5,20 +5,26 @@ import requests
 
 
 class VacanciesAPI(ABC):
-    HH_API_URL = "https://api.hh.ru"
+    """
+    Получать данные о вакансиях через API
+    """
 
-    def _fetch_company_data(self, company_id: int) -> Any:
+    HH_API_URL: str = "https://api.hh.ru"
+
+    @staticmethod
+    def _fetch_company_data(company_id: int) -> Any:
         """
         Получить данные о компании по ID
         :param company_id: ID компании, вакансии которой интересуют пользователя
         :return: данные о компании
         """
-        url = f"{self.HH_API_URL}/employers/{company_id}"
+        url = f"{VacanciesAPI.HH_API_URL}/employers/{company_id}"
         response = requests.get(url, headers={"User-Agent": "HH-Data-Parser/1.0"})
         response.raise_for_status()
         return response.json()
 
-    def _fetch_vacancies_by_company(self, company_id: int) -> List[Dict[str, Any]]:
+    @staticmethod
+    def _fetch_vacancies_by_company(company_id: int) -> List[Dict[str, Any]]:
         """
         Получить все вакансии компании (с пагинацией)
         :param company_id: ID компании, вакансии которой интересуют пользователя
@@ -28,7 +34,7 @@ class VacanciesAPI(ABC):
         page = 0
         per_page = 100
         while True:
-            url = f"{self.HH_API_URL}/vacancies"
+            url = f"{VacanciesAPI.HH_API_URL}/vacancies"
             params = {
                 "employer_id": company_id,
                 "per_page": per_page,
@@ -45,7 +51,8 @@ class VacanciesAPI(ABC):
             page += 1
         return vacancies
 
-    def collect_all_data(self, company_ids: List[int]) -> tuple[List[Dict], List[Dict]]:
+    @staticmethod
+    def collect_all_data(company_ids: List[int]) -> tuple[List[Dict], List[Dict]]:
         """
         Собрать данные по всем компаниям и вакансиям
         :return: данные компаний, вакансий
@@ -57,7 +64,7 @@ class VacanciesAPI(ABC):
         for cid in company_ids:
             try:
                 print(f"Обрабатываем компанию ID {cid}...")
-                company = self._fetch_company_data(cid)
+                company = VacanciesAPI._fetch_company_data(cid)
                 companies.append(
                     {
                         "company_id": company["id"],
@@ -68,7 +75,7 @@ class VacanciesAPI(ABC):
                     }
                 )
 
-                vacancies = self._fetch_vacancies_by_company(cid)
+                vacancies = VacanciesAPI._fetch_vacancies_by_company(cid)
                 for vac in vacancies:
                     salary = vac.get("salary")
                     all_vacancies.append(
