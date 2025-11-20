@@ -74,3 +74,27 @@ def vacancies():
             "published_at": "2025-01-01 12:00:00"
         }
     ]
+
+@pytest.fixture
+def company_rows():
+    return [
+    {"name": "Компания А", "vacancies_count": 2},
+    {"name": "Компания Б", "vacancies_count": 1}
+]
+
+@pytest.fixture
+def vacancy_rows():
+    return [
+        {
+            "company_name": "Компания А",
+            "vacancy_name": "Python Developer",
+            "salary_from": 100000,
+            "salary_to": 150000,
+            "currency": "RUB",
+            "url": "http://hh.ru/vacancy1"
+        }
+]
+
+@pytest.fixture
+def salary_row():
+    return {"avg_salary": 120000}
