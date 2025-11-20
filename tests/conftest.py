@@ -44,3 +44,33 @@ def sample_vacancies_page_2():
         ],
         "pages": 2
     }
+
+
+@pytest.fixture
+def companies():
+    return [
+        {
+            "company_id": 1,
+            "name": "Test Company",
+            "url": "http://testcompany.ru",
+            "description": "Описание",
+            "site_url": "http://site.ru"
+        }
+    ]
+
+
+@pytest.fixture
+def vacancies():
+    return [
+        {
+            "vacancy_id": 11,
+            "company_id": 1,
+            "name": "Senior Developer",
+            "salary_from": 100000,
+            "salary_to": 200000,
+            "currency": "RUB",
+            "url": "http://vacancy.ru",
+            "area": "Москва",
+            "published_at": "2025-01-01 12:00:00"
+        }
+    ]
